@@ -1,0 +1,36 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "kerbtap"
+version = "0.5.0"
+description = "Install a governance scaffold into a git repository and generate an AI SDLC Evidence Pack from its own systems."
+readme = "README.md"
+requires-python = ">=3.11"
+license = "Apache-2.0"
+license-files = ["LICENSE"]
+authors = [{ name = "kerbtap" }]
+dependencies = []
+
+[project.urls]
+Repository = "https://github.com/kerbtap/kerbtap"
+Issues = "https://github.com/kerbtap/kerbtap/issues"
+
+[project.optional-dependencies]
+dev = ["pytest>=8,<9", "setuptools>=77"]
+
+[project.scripts]
+kerbtap = "kerbtap.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["kerbtap*"]
+
+[tool.setuptools.package-data]
+"kerbtap.data" = ["*.json"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+addopts = "-ra"

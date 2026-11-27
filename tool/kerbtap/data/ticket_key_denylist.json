@@ -1,0 +1,4 @@
+{
+  "_comment": "Prefixes of tokens shaped like a ticket key that are not tickets (SHA-256, UTF-8). Hand-written: an omission records a false reference.",
+  "prefixes": ["SHA", "UTF", "ISO", "RFC", "CVE", "CWE", "HTTP", "TLS", "SSL", "AES", "MD"]
+}

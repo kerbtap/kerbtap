@@ -1,0 +1,8 @@
+{
+  "name": "kerbtap",
+  "description": "kerbtap machine tier: guard hooks, the planner, builder, advisor, reviewer and scribe agents, the /advisor fallback skill and the global doctrine.",
+  "license": "Proprietary",
+  "author": {
+    "name": "kerbtap"
+  }
+}

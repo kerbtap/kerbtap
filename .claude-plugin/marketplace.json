@@ -1,0 +1,19 @@
+{
+  "name": "kerbtap",
+  "owner": {
+    "name": "kerbtap"
+  },
+  "description": "kerbtap: the governance layer for AI-orchestrated software development.",
+  "plugins": [
+    {
+      "name": "kerbtap",
+      "source": "./global",
+      "description": "kerbtap machine tier: hooks, agents, the /advisor fallback and the doctrine."
+    },
+    {
+      "name": "kerbtap-research",
+      "source": "./research",
+      "description": "kerbtap researcher agent (needs the pwm command line)."
+    }
+  ]
+}

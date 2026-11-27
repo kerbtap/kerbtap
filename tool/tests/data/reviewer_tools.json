@@ -1,0 +1,9 @@
+{
+  "_comment": "Tool policy for reviewer-class agent contracts (research round R4, Codex ruling 2026-09-17). Which agents are reviewers is NOT listed here: it comes from REVIEWER_AGENT in the review gate (both copies) plus INSTALLED_REVIEWER in kerbtap.init. Names containing ':' are plugin agents with no contract in this repository.",
+  "allowed": {
+    "architect": ["Read", "Grep", "Glob", "Bash", "WebFetch", "WebSearch"],
+    "reviewer": ["Read", "Grep", "Glob", "Bash"]
+  },
+  "forbidden": ["Write", "Edit", "MultiEdit", "NotebookEdit"],
+  "untracked": {}
+}

@@ -1,0 +1,6 @@
+{
+  "name": "kerbtap-research",
+  "description": "kerbtap researcher agent: all web search and fact research through the pwm command line. Install only where pwm is installed.",
+  "license": "Proprietary",
+  "author": { "name": "kerbtap" }
+}

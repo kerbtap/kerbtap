@@ -1,0 +1,83 @@
+{
+  "schema_version": "1.0",
+  "source": "Framework clauses and mapping targets per the repo's R3 control-map dossier. Regulatory citations verified verbatim against canonical EUR-Lex in R3. Legal text is cited, never restated here.",
+  "honesty_note": "These framework clauses are authorship-agnostic: none imposes an AI-specific obligation, and auditors today accept conventional SDLC evidence (protected branches, PR approvals, CI logs) for AI-authored changes identically to human-authored ones. AI-specific attestation is future-proofing, not a present legal necessity (repo dossier R3). This control map is a mapping, not an audit opinion, a certification, or legal advice.",
+  "clause_caveats": {
+    "ISO/IEC 27001:2022": "ISO control text is copyrighted/paywalled; control intent is corroborated from auditor guidance, not quoted from the standard (R3 §3).",
+    "SOC 2": "AICPA Trust Services Criteria is a private framework, not law (R3 §4).",
+    "US SSDF (NIST SP 800-218)": "Evidenced via the CISA Secure Software Development Attestation Common Form (self-attestation; process-based; silent on AI authorship) (R3 §8).",
+    "DORA (EU) 2024/1774": "Commission Delegated Regulation (EU) 2024/1774; in force 2025-01-17. Distinct from base Reg. (EU) 2022/2554 Art. 17 (incident management) — the RTS article is the operative one (R3 §2)."
+  },
+  "controls": [
+    {
+      "control_id": "adversarial-review-gate",
+      "observed_control": "Adversarial / peer review gate before deliverable commits",
+      "signal": "review_attested",
+      "detected_by": "Per commit: a structured 'Governor-Review: PASS' trailer bound to a review artifact by content hash ('Governor-Review-Ref: sha256:<hex>'), recorded by 'kerbtap review record' and re-checkable with 'kerbtap review verify'. A free-text review note alone is not counted.",
+      "clauses": [
+        {"framework": "SOC 2", "clause": "CC8.1", "clause_id": "SOC2-CC8.1", "intent": "Changes are authorized, designed, developed, tested, approved, and implemented under a controlled process."},
+        {"framework": "ISO/IEC 27001:2022", "clause": "A.8.32", "clause_id": "ISO-A.8.32", "intent": "Change management for information systems."},
+        {"framework": "DORA (EU) 2024/1774", "clause": "Art. 17", "clause_id": "DORA-Art.17", "intent": "Documented, approved, tested, and segregated ICT changes; verification of security requirements."},
+        {"framework": "US SSDF (NIST SP 800-218)", "clause": "PW.7", "clause_id": "SSDF-PW.7", "intent": "Review and/or analyze human-readable code to identify vulnerabilities and verify compliance with requirements."}
+      ]
+    },
+    {
+      "control_id": "change-mgmt-feature-branch-pr",
+      "observed_control": "Change management via feature-branch + pull request (direct-to-main tracked as a documented exception)",
+      "signal": "feature_branch_pr",
+      "detected_by": "Changes land through merge-commit or squash-merge pull requests rather than being committed straight to the default branch.",
+      "clauses": [
+        {"framework": "DORA (EU) 2024/1774", "clause": "Art. 17", "clause_id": "DORA-Art.17", "intent": "Documented, approved, and controlled ICT changes."},
+        {"framework": "ISO/IEC 27001:2022", "clause": "A.8.32", "clause_id": "ISO-A.8.32", "intent": "Change management for information systems."}
+      ]
+    },
+    {
+      "control_id": "segregation-of-duties",
+      "observed_control": "Segregation of duties between change author and change approver",
+      "signal": "segregation",
+      "detected_by": "Per change: the PR's recorded merge actor differs from its recorded author (pull_request.merged_by vs author_login in the manifest). A review trailer is not identity-bound, so it does not attest segregation of duties. Counted only where that evidence was actually collected.",
+      "clauses": [
+        {"framework": "DORA (EU) 2024/1774", "clause": "Art. 17", "clause_id": "DORA-Art.17", "intent": "Segregation between change-approving and change-requesting functions."}
+      ]
+    },
+    {
+      "control_id": "branch-protection-merge-gate",
+      "observed_control": "Deny-by-default merge gate (GitHub branch protection / rulesets on the default branch)",
+      "signal": "merge_gate",
+      "detected_by": "GitHub branch metadata plus ruleset/classic-protection configuration read via the GitHub API at collection time. This is the CURRENT configuration — a repo-level control record, not per-change evidence that historical changes were gated (protection history is not readable).",
+      "clauses": [
+        {"framework": "SOC 2", "clause": "CC8.1", "clause_id": "SOC2-CC8.1", "intent": "Changes are authorized and approved under a controlled process."},
+        {"framework": "ISO/IEC 27001:2022", "clause": "A.8.32", "clause_id": "ISO-A.8.32", "intent": "Change management enforced by a technical control rather than convention alone."},
+        {"framework": "DORA (EU) 2024/1774", "clause": "Art. 17", "clause_id": "DORA-Art.17", "intent": "Documented, approved, and controlled ICT changes."},
+        {"framework": "US SSDF (NIST SP 800-218)", "clause": "PW.7", "clause_id": "SSDF-PW.7", "intent": "Code review before integration, where the gate requires an approving review."}
+      ]
+    },
+    {
+      "control_id": "codeowners-review-ownership",
+      "observed_control": "Code-review ownership routing (CODEOWNERS)",
+      "signal": "codeowners",
+      "detected_by": "Presence of a CODEOWNERS file at a standard location (.github/CODEOWNERS, CODEOWNERS, or docs/CODEOWNERS). Advisory routing unless branch protection/rulesets require code-owner review (see the merge-gate record); file contents are deliberately not quoted into the pack.",
+      "clauses": [
+        {"framework": "US SSDF (NIST SP 800-218)", "clause": "PW.7", "clause_id": "SSDF-PW.7", "intent": "Designated reviewers for human-readable code, routed by ownership."}
+      ]
+    },
+    {
+      "control_id": "enforcing-precommit-review-hook",
+      "observed_control": "Enforcing pre-commit review hook (blocks guarded commits until the bypass prefix is typed; does not check for a recorded review)",
+      "signal": "enforcing_hook",
+      "detected_by": "Presence of .claude/hooks/precommit_review_guard.py — a deny-mode gate that blocks a commit of a guarded file until the operator types the bypass prefix. It does not check for a recorded review.",
+      "clauses": [
+        {"framework": "ISO/IEC 27001:2022", "clause": "A.8.32", "clause_id": "ISO-A.8.32", "intent": "Change management enforced by a technical control rather than convention alone."}
+      ]
+    },
+    {
+      "control_id": "decision-log-audit-trail",
+      "observed_control": "Decision log / change-event audit trail (git-versioned)",
+      "signal": "audit_trail",
+      "detected_by": "Presence of docs/decision-log.md — a dated decision log versioned in git. Append-only is a documented convention, not an enforced technical control; the underlying versioned record is git history.",
+      "clauses": [
+        {"framework": "DORA (EU) 2024/1774", "clause": "Art. 33", "clause_id": "DORA-Art.33", "intent": "Logging of ICT-change-management events for the audit trail."}
+      ]
+    }
+  ]
+}

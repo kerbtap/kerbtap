@@ -1,0 +1,47 @@
+{
+  "_comment": "STARTER TEMPLATE — per-repo hook wiring for <PROJECT>. Only the hooks shipped in this scaffold are wired here. The GENERIC safety hooks (destructive_git_guard, secret_exposure_guard, inline_script_guard, ci_config_reminder, main_branch_push_guard, session_start_context) are promoted globally to ~/.claude/hooks and apply to every project automatically — do NOT re-wire them per project. permissions.deny is intentionally empty. TODO: rename the PROJECT_REVIEWED / PROJECT_DOC_REVIEWED / PROJECT_CLAIM_VERIFIED bypass env vars in the hooks + CLAUDE.md, fill each hook's TODO constants, and delete any hook this project does not want.",
+  "permissions": {
+    "deny": []
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"$CLAUDE_PROJECT_DIR/.claude/hooks/precommit_review_guard.py\"",
+            "timeout": 10
+          },
+          {
+            "type": "command",
+            "command": "python3 \"$CLAUDE_PROJECT_DIR/.claude/hooks/precommit_doc_consistency_guard.py\"",
+            "timeout": 10
+          }
+        ]
+      },
+      {
+        "matcher": "Edit|Write|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"$CLAUDE_PROJECT_DIR/.claude/hooks/fact_claim_guard.py\"",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"$CLAUDE_PROJECT_DIR/.claude/hooks/mangled_text_guard.py\"",
+            "timeout": 5
+          }
+        ]
+      }
+    ]
+  }
+}

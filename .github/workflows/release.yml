@@ -1,0 +1,47 @@
+name: release
+
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+
+      - name: Build the wheel
+        run: python -m pip wheel --no-deps -w dist ./tool
+
+      # The tag names the version: a wheel of another version is not uploaded.
+      - name: Check the wheel matches the tag
+        run: |
+          set -e
+          version="${GITHUB_REF_NAME#v}"
+          [ -f "dist/kerbtap-${version}-py3-none-any.whl" ] || { echo "no dist/kerbtap-${version}-py3-none-any.whl"; ls dist; exit 1; }
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist/
+
+  publish:
+    needs: build
+    runs-on: ubuntu-latest
+    environment: pypi
+    permissions:
+      id-token: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist/
+
+      - uses: pypa/gh-action-pypi-publish@release/v1

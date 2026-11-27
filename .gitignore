@@ -1,0 +1,17 @@
+.DS_Store
+*.pyc
+__pycache__/
+.env
+.env.*
+.venv/
+*.egg-info/
+/build/
+/dist/
+tool/build/
+tool/dist/
+.pytest_cache/
+
+# kerbtap review packages and local gate telemetry: transient, never committed.
+# Review records under .governor/reviews/ stay tracked.
+.governor/review-packages/
+.governor/telemetry/

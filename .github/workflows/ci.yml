@@ -1,0 +1,58 @@
+name: ci
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+
+      - name: Install the tool
+        run: python -m pip install -e "tool[dev]"
+
+      - name: Tool test suite
+        working-directory: tool
+        run: python -m pytest
+
+      # A glob that matches no file fails the step instead of passing it empty.
+      - name: Hook tests
+        run: |
+          set -e
+          for t in global/hooks/test_*.py starter/.claude/hooks/test_*.py; do
+            [ -f "$t" ] || { echo "no hook test matches: $t"; exit 1; }
+            python "$t"
+          done
+
+  # The hooks run as `python3 <hook>` under whatever interpreter the machine has.
+  # Python 3.9 is the floor the tool enforces; ubuntu-24.04 still has a 3.9 build.
+  hooks-on-floor-python:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.9"
+
+      - name: Hook tests
+        run: |
+          set -e
+          for t in global/hooks/test_*.py starter/.claude/hooks/test_*.py; do
+            [ -f "$t" ] || { echo "no hook test matches: $t"; exit 1; }
+            python "$t"
+          done

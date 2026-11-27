@@ -1,0 +1,11 @@
+__pycache__/
+*.pyc
+.pytest_cache/
+.venv/
+venv/
+*.egg-info/
+/dist/
+/build/
+# Never tracked: the wheel's bundled scaffold is written into the build directory, and a
+# copy inside the package would be a second, stale source of the gates.
+kerbtap/_artifact/

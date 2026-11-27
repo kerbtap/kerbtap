@@ -1,0 +1,5 @@
+{
+  "_comment": "Slash commands a skill may name that are not skills in its own tier (research round R8). Keep it narrow: Claude Code's own commands, and plugin commands only when a shipped skill actually names one. A name missing here and from the tier is a dangling reference.",
+  "harness": ["clear", "compact", "config", "help", "loop"],
+  "plugin": []
+}
