@@ -1,5 +1,10 @@
 # kerbtap
 
+[![PyPI](https://img.shields.io/pypi/v/kerbtap)](https://pypi.org/project/kerbtap/)
+[![CI](https://github.com/kerbtap/kerbtap/actions/workflows/ci.yml/badge.svg)](https://github.com/kerbtap/kerbtap/actions/workflows/ci.yml)
+[![Python](https://img.shields.io/badge/python-3.11%2B-blue)](https://pypi.org/project/kerbtap/)
+[![License](https://img.shields.io/badge/license-Apache%202.0-blue)](LICENSE)
+
 **The delivery discipline of a senior engineering team, installed into Claude Code.**
 
 A spec before any code. The mechanism checked before the fix. A second model's eye on every plan and diff. Proof before anyone says "done". And hooks that hold the line when Claude wants to cut a corner.
